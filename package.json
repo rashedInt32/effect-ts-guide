@@ -8,7 +8,10 @@
     "typecheck": "tsc --noEmit",
     "run": "bun",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "site:dev": "cd site && npm run dev",
+    "site:sync": "cd site && node scripts/sync-files.js",
+    "site:build": "cd site && npm run build"
   },
   "dependencies": {
     "effect": "^3.19.15",
