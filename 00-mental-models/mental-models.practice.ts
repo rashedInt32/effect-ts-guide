@@ -9,7 +9,7 @@
  * =============================================================================
  */
 
-import { Console, Effect, Either, Option, pipe } from "effect";
+import { Console, Effect, Either, Option, Data, pipe } from "effect";
 
 // =============================================================================
 // EXERCISE 1: Option - Handling Missing Values
@@ -73,7 +73,10 @@ const getUserNameUpper = (id: number) => {
   //   - You want to transform User → string (user.name.toUpperCase())
   //   - Since your function returns a PLAIN VALUE (string), use Effect.map
   //   - Example: getUserById(id).pipe(Effect.map(user => ...))
-  throw new Error("TODO: Implement this");
+  return pipe(
+    getUserById(id),
+    Effect.map(user => user.name.toUpperCase()),
+  )
 };
 
 /**
@@ -89,7 +92,12 @@ const getUserWithPreferences = (id: number) => {
   //   - Since getUserPreferences returns an EFFECT, use Effect.flatMap
   //   - Example: getUserById(id).pipe(Effect.flatMap(user => getUserPreferences(user.id)))
   //   - To return both, you might need Effect.gen or nested flatMap
-  throw new Error("TODO: Implement this");
+  return pipe(
+    getUserById(id),
+    Effect.flatMap(user => getUserPreferences(user.id).pipe(
+      Effect.map(preferences => ({ user, preferences }))
+    ))
+  )
 };
 
 /**
@@ -103,7 +111,10 @@ const getUserWithLogging = (id: number) => {
   //   - Use Effect.tap when you want to DO something (log) but keep the original value
   //   - tap's return value is IGNORED - the user passes through unchanged
   //   - Example: getUserById(id).pipe(Effect.tap(user => Console.log(user.email)))
-  throw new Error("TODO: Implement this");
+  return pipe(
+    getUserById(id),
+    Effect.tap(user => Console.log(`User email: ${user.email}`))
+  )
 };
 
 // =============================================================================
@@ -204,24 +215,22 @@ const saveToDatabase = (data: unknown): Effect.Effect<void, Error> => {
 // EXERCISE 5: Error Handling with Tagged Errors
 // =============================================================================
 
-// Defined error types
-class UserNotFoundError {
-  readonly _tag = "UserNotFoundError";
-  constructor(readonly userId: number) {}
-}
+// Defined error types using Data.TaggedError (Effect's recommended approach)
+class UserNotFoundError extends Data.TaggedError("UserNotFoundError")<{
+  readonly userId: number;
+}> {}
 
-class PermissionDeniedError {
-  readonly _tag = "PermissionDeniedError";
-  constructor(readonly action: string) {}
-}
+class PermissionDeniedError extends Data.TaggedError("PermissionDeniedError")<{
+  readonly action: string;
+}> {}
 
 const fetchSecureUser = (id: number, isAdmin: boolean) =>
   Effect.gen(function* () {
     if (!isAdmin) {
-      return yield* Effect.fail(new PermissionDeniedError("fetchUser"));
+      return yield* Effect.fail(new PermissionDeniedError({ action: "fetchUser" }));
     }
     if (id === 0) {
-      return yield* Effect.fail(new UserNotFoundError(id));
+      return yield* Effect.fail(new UserNotFoundError({ userId: id }));
     }
     return { id, name: "Secret User", clearanceLevel: 5 };
   });

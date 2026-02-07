@@ -24,7 +24,7 @@
  * =============================================================================
  */
 
-import { Console, Effect, Either, Option, Context, Layer, pipe } from "effect";
+import { Console, Effect, Either, Option, Context, Layer, Data, pipe } from "effect";
 
 // =============================================================================
 // SECTION 1: WHY EFFECT? - THE PROBLEM EFFECT SOLVES
@@ -624,37 +624,32 @@ const fetchMultipleEffect = (ids: string[]) =>
  *  ╚═══════════════════════════════════════════════════════════════════════════╝
  */
 
-// Define typed errors with _tag for discrimination
-class NetworkError2 {
-  readonly _tag = "NetworkError" as const;
-  constructor(readonly message: string) {}
-  
-}
+// Define typed errors using Data.TaggedError (Effect's recommended approach)
+// TaggedError automatically adds the _tag property for discrimination
+class NetworkError2 extends Data.TaggedError("NetworkError")<{
+  readonly message: string;
+}> {}
 
-class NotFoundError2 {
-  readonly _tag = "NotFoundError" as const;
-  constructor(readonly resource: string) {}
-}
+class NotFoundError2 extends Data.TaggedError("NotFoundError")<{
+  readonly resource: string;
+}> {}
 
-class ValidationError2 {
-  readonly _tag = "ValidationError" as const;
-  constructor(
-    readonly field: string,
-    readonly message: string,
-  ) {}
-}
+class ValidationError2 extends Data.TaggedError("ValidationError")<{
+  readonly field: string;
+  readonly message: string;
+}> {}
 
 // Function that can fail with multiple error types
 const fetchUserOrFail = (id: number) =>
   Effect.gen(function* () {
     if (id < 0) {
-      return yield* Effect.fail(new ValidationError2("id", "Must be positive"));
+      return yield* Effect.fail(new ValidationError2({ field: "id", message: "Must be positive" }));
     }
     if (id === 0) {
-      return yield* Effect.fail(new NotFoundError2(`user/${id}`));
+      return yield* Effect.fail(new NotFoundError2({ resource: `user/${id}` }));
     }
     if (Math.random() < 0.1) {
-      return yield* Effect.fail(new NetworkError2("Connection refused"));
+      return yield* Effect.fail(new NetworkError2({ message: "Connection refused" }));
     }
     return { id, name: "Alice" };
   });
@@ -833,12 +828,8 @@ const someEffect = Effect.succeed("test");
 // PITFALL 5: Not handling all error cases
 // ─────────────────────────────────────────────────────────────────────────────
 
-class ErrorA {
-  readonly _tag = "ErrorA" as const;
-}
-class ErrorB {
-  readonly _tag = "ErrorB" as const;
-}
+class ErrorA extends Data.TaggedError("ErrorA")<{}> {}
+class ErrorB extends Data.TaggedError("ErrorB")<{}> {}
 
 const mightFail = Effect.gen(function* () {
   if (Math.random() > 0.5) {
