@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@monaco-editor/react": "^4.6.0",
+    "effect": "^3.19.16",
     "idb-keyval": "^6.2.1",
     "monaco-editor": "^0.45.0",
     "next": "14.1.0",
