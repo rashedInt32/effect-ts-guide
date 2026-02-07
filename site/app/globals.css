@@ -1,0 +1,45 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --tokyo-bg: #011627;
+  --tokyo-fg: #d6deeb;
+  --tokyo-blue: #7aa2f7;
+  --tokyo-purple: #bb9af7;
+  --tokyo-green: #9ece6a;
+  --tokyo-red: #f7768e;
+  --tokyo-orange: #ff9e64;
+  --tokyo-yellow: #e0af68;
+  --tokyo-cyan: #7dcfff;
+  --tokyo-gray: #565f89;
+}
+
+body {
+  background-color: var(--tokyo-bg);
+  color: var(--tokyo-fg);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #01111d;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1d3b53;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #234d70;
+}
+
+/* Monaco editor customizations */
+.monaco-editor {
+  background-color: transparent !important;
+}
