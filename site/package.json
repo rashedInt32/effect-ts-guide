@@ -1,0 +1,34 @@
+{
+  "name": "effect-learning-site",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "sync": "node scripts/sync-files.js",
+    "dev": "npm run sync && concurrently \"npm run sync:watch\" \"next dev\"",
+    "sync:watch": "chokidar ../**/*.ts -i ../site/**/* -i ../node_modules/**/* -i ../.git/**/* -c \"node scripts/sync-files.js\"",
+    "build": "npm run sync && next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@monaco-editor/react": "^4.6.0",
+    "idb-keyval": "^6.2.1",
+    "monaco-editor": "^0.45.0",
+    "next": "14.1.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-resizable-panels": "^1.0.9",
+    "zustand": "^4.5.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "autoprefixer": "^10.0.1",
+    "chokidar-cli": "^3.0.0",
+    "concurrently": "^8.2.2",
+    "postcss": "^8",
+    "tailwindcss": "^3.3.0",
+    "typescript": "^5"
+  }
+}
