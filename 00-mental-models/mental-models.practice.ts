@@ -10,6 +10,7 @@
  */
 
 import { Console, Effect, Either, Option, Data, pipe } from "effect";
+import { instanceOfUnsafe } from 'effect/Match';
 
 // =============================================================================
 // EXERCISE 1: Option - Handling Missing Values
@@ -161,7 +162,13 @@ const processProduct = (id: number) => {
   //     Effect.tap(product => Console.log(`Discounted: ${product.price}`)),
   //     Effect.map(product => product.price)
   //   )
-  throw new Error("TODO: Implement this");
+  pipe(
+    fetchProduct(id),
+    Effect.tap(product => Console.log(`Original price: $${product.price}`)),
+    Effect.flatMap(product => applyDiscount(product, 20)),
+    Effect.tap(product => Console.log(`Discounted price: $${product.price}`)),
+    Effect.map(product => product.price)
+  )
 };
 
 // =============================================================================
@@ -180,7 +187,7 @@ const getUserAge = (userId: string): Option.Option<number> => {
   //   - This is SYNC (no async)
   //   - Value might not exist (but that's not an "error", just absence)
   //   - Use Option! Option.fromNullable(cache[userId])
-  throw new Error("TODO: Implement this");
+  return Option.fromNullable(cache[userId]);
 };
 
 /**
@@ -194,7 +201,7 @@ const parseDate = (input: string): Either.Either<Date, string> => {
   //   - This is SYNC (no async)
   //   - It can FAIL with useful error info (not just "missing")
   //   - Use Either! Either.right(date) or Either.left("Invalid date format")
-  throw new Error("TODO: Implement this");
+  return  !isNaN(Date.parse(input)) ? Either.right(new Date(input)) : Either.left("Invalid Date Format");
 };
 
 /**
@@ -204,11 +211,14 @@ const parseDate = (input: string): Either.Either<Date, string> => {
  */
 // TODO: What's the right return type? Implement it.
 const saveToDatabase = (data: unknown): Effect.Effect<void, Error> => {
-  // HINT:
-  //   - This is ASYNC (database calls)
-  //   - Might need services (logging, db connection)
-  //   - Use Effect!
-  throw new Error("TODO: Implement this");
+  return Effect.gen(function* () {
+    yield* Console.log("Saving to database...");
+    yield* Effect.tryPromise({
+      try: () => Promise.resolve(),
+      catch: () => new Error("Failed to save to database"),
+    })
+
+  })
 };
 
 // =============================================================================
