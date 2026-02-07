@@ -628,6 +628,7 @@ const fetchMultipleEffect = (ids: string[]) =>
 class NetworkError2 {
   readonly _tag = "NetworkError" as const;
   constructor(readonly message: string) {}
+  
 }
 
 class NotFoundError2 {

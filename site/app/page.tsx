@@ -53,7 +53,7 @@ export default function Home() {
               Effect Docs
             </a>
             <a 
-              href="https://github.com/Effect-TS/effect" 
+              href="https://github.com/rashedInt32/effect-ts-guide" 
               target="_blank" 
               rel="noopener noreferrer"
               className="text-xs text-tokyo-cyan hover:underline"
