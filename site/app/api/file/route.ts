@@ -13,8 +13,8 @@ export async function GET(request: NextRequest) {
   // Security: prevent directory traversal
   const sanitizedPath = filePath.replace(/\.\./g, '');
   
-  // Read from parent directory (repo root)
-  const fullPath = path.join(process.cwd(), '..', sanitizedPath);
+  // Read from public/learning-files directory (copied during build)
+  const fullPath = path.join(process.cwd(), 'public', 'learning-files', sanitizedPath);
   
   try {
     const content = await fs.readFile(fullPath, 'utf-8');
