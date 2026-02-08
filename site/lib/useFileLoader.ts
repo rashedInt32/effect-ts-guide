@@ -10,8 +10,6 @@ import { FileNode } from '@/types';
 const learningFiles = [
   '00-mental-models/mental-models.reference.ts',
   '00-mental-models/mental-models.practice.ts',
-  '00-mental-models/mental-models.practice-empty.ts',
-  '00-mental-models/mental-models.reference-opus.ts',
   '01-effect-basics/effect-basics.reference.ts',
   '01-effect-basics/effect-basics.practice.ts',
   '02-schema/schema.reference.ts',
